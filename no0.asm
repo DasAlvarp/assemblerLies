@@ -1,0 +1,5 @@
+#send 0010 0000 0000 0001 0100 1001 0010 0100. It's also 536955172
+addi	$t1 $zero 536955172
+addi	$a0 $t1 0
+li	$v0 35
+syscall
