@@ -23,8 +23,8 @@ syscall
 stepTwo:
 	lb	$t1, 0($a0) 	# load the next character into t1
 	beqz	$t1, end 	# check for the null character
-#	bge 	$t1, 58, end1
-#	ble	$t1, 47, end
+	bge 	$t1, 58, error	# is it ascii?
+	ble	$t1, 47, error
 	addi	$t1, $t1, -48
 	addi	$t2, $zero, 0	#x = 0
 	multiply:	#for multiplication. While x < t1 (its proper value) a+= 10, or 100 or whatever, x++
@@ -45,6 +45,7 @@ end:
 	li	$v0, 1
 	syscall
 exit:
+error:
+	li	$v0, -1
 
-#to multiply by 10, take original register, SLL 3 + SLL 1, or 8 + 2 = 10. I feel so smart right now.
-
+#to multiply by 10, take original register, SLL 3 + SLL 1, or 8 + 2 = 10. I feel so smart right now
