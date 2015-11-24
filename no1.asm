@@ -25,7 +25,7 @@ addi	$s3, $zero, 0 	# is the number negative?
 #get input
 
 lb	$t1, 0($a0)
-beq	$t1, 45, neggy
+bne	$t1, 45, stepTwo
 neggy: 
 	addi	$s3, $zero, 1
 	addi	$a0, $a0, 1
@@ -47,18 +47,17 @@ stepTwo:
 j stepTwo # return to the top of the loop
 negative:
 	sub	$a0, $zero, $s0
-	li	$v0, 1
-	syscall
 	j exit
 end:
 	beq	$s3, 1, negative
 	add	$a0, $s0, 0
-	li	$v0, 1
-	syscall
+
 	j exit
 
 error:
 	li	$v0, -1
 exit:
+	li	$v0, 1
+	syscall
 
 #to multiply by 10, take original register, SLL 3 + SLL 1, or 8 + 2 = 10. I feel so smart right now

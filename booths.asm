@@ -1,8 +1,8 @@
 .data
 	multiplicandPrompt:	.asciiz"\n Multiplicand\n"
-	multiplicand:	.space 32
+	multiplicand:		.space 12
 	multiplierPrompt:	.asciiz"\n Multiplier\n"
-	multiplier:	.space 32
+	multiplier:		.space 12
 .text
 main:
 
@@ -29,7 +29,7 @@ addi	$s3, $zero, 0 	# is the number negative?
 #get input
 
 lb	$t1, 0($a0)
-beq	$t1, 45, neggy
+bne	$t1, 45, stepTwo
 neggy: 
 	addi	$s3, $zero, 1
 	addi	$a0, $a0, 1
@@ -59,6 +59,13 @@ end:
 exit1:
 
 
+add	$v0, $zero, 54
+la	$a1, multiplier
+la	$a0, multiplierPrompt
+addi	$a2, $zero, 32
+syscall
+la	$a0, multiplier
+la	$t2, 0
 #multiplicand
 #initialize variables
 addi	$s0, $zero, 0 	#  string to binary thingy with the final number
@@ -70,7 +77,7 @@ addi	$s3, $zero, 0 	# is the number negative?
 #get input
 
 lb	$t1, 0($a0)
-beq	$t1, 45, neggy2
+bne	$t1, 45, stepTwo2
 neggy2: 
 	addi	$s3, $zero, 1
 	addi	$a0, $a0, 1
@@ -89,7 +96,7 @@ stepTwo2:
 	add	$s0, $s0, $t1 #total += latest digit
 	addi	$a0, $a0, 1 	# increment the string pointer
 
-j stepTwo # return to the top of the loop
+j stepTwo2 # return to the top of the loop
 negative2:
 	sub	$s5, $zero, $s0
 	j exit
@@ -97,8 +104,27 @@ end2:
 	beq	$s3, 1, negative2
 	add	$s5, $s0, 0
 	j exit
-
 exit:
+	#intitialization for ProperMUltiplyMain
+	add	$s0, $zero, 0	#product register half 1
+	add	$s1, $s5, 0	#product register half 2
+	add 	$t0, $zero, 0	#a massive waste of space! It's the previous bit
+
+properMultilplyMain:
+	#output the '64 bit' variable. Kind of 64 bits. Not really. At all.
+	li 	$v0, 35
+	add 	$a0, $s0, $zero
+	syscall
+	add 	$a0, $s1, $zero
+	syscall
+	
+
+
+
+
+
+
+
 
 error:
 	li	$v0, -1
